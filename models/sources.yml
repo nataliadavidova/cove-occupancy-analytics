@@ -1,0 +1,77 @@
+version: 2
+
+sources:
+  - name: cove_raw
+    description: "Raw operational data loaded from the provided JSONL extracts."
+    schema: cove_raw
+
+    tables:
+      - name: properties
+        description: "Property records and their lease availability periods."
+        columns:
+          - name: _id
+            description: "Unique property identifier."
+            data_tests:
+              - not_null
+              - unique
+
+          - name: lease_start_date
+            data_tests:
+              - not_null
+
+          - name: lease_end_date
+            data_tests:
+              - not_null
+
+      - name: rooms
+        description: "Rooms belonging to the managed properties."
+        columns:
+          - name: _id
+            description: "Unique room identifier."
+            data_tests:
+              - not_null
+              - unique
+
+          - name: propertyId
+            description: "Identifier of the property containing the room."
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: "source('cove_raw', 'properties')"
+                    field: _id
+
+      - name: tenancies
+        description: "Room tenancy periods exported from the operational system."
+        columns:
+          - name: _id
+            description: "Unique tenancy identifier."
+            data_tests:
+              - not_null
+              - unique
+
+          - name: roomId
+            description: "Identifier of the occupied room."
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: "source('cove_raw', 'rooms')"
+                    field: _id
+
+          - name: checkInDate
+            data_tests:
+              - not_null
+
+          - name: checkOutDate
+            data_tests:
+              - not_null
+
+          - name: status
+            data_tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values:
+                      - active
+                      - cancelled

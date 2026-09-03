@@ -1,0 +1,21 @@
+name: "cove_occupancy_analytics"
+version: "1.0.0"
+config-version: 2
+
+profile: "cove_occupancy_analytics"
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  cove_occupancy_analytics:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table

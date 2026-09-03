@@ -1,0 +1,8 @@
+.venv/
+.idea/
+logs/
+target/
+dbt_packages/
+.DS_Store
+profiles.yml
+*.log

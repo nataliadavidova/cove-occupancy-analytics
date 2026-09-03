@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: int_room_nights
+    description: >
+      One row per available room and calendar night, with occupancy determined
+      from non-cancelled tenancy periods.
+    columns:
+      - name: property_id
+        description: "Identifier of the property containing the room."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: "ref('stg_properties')"
+                field: property_id
+
+      - name: property_name
+        description: "Property display name."
+        data_type: STRING
+
+      - name: city
+        description: "City where the property is located."
+        data_type: STRING
+
+      - name: room_id
+        description: "Identifier of the available room."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: "ref('stg_rooms')"
+                field: room_id
+
+      - name: occupancy_date
+        description: "Calendar date representing an available room-night."
+        data_type: DATE
+        data_tests:
+          - not_null
+
+      - name: is_occupied
+        description: >
+          True when at least one non-cancelled tenancy includes the room-night.
+        data_type: BOOLEAN
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - true
+                  - false
+                quote: false

@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: fct_monthly_property_occupancy
+    description: >
+      Monthly property occupancy calculated as occupied room-nights divided
+      by available room-nights.
+    columns:
+      - name: property_id
+        description: "Unique property identifier."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: "ref('stg_properties')"
+                field: property_id
+
+      - name: property_name
+        description: "Property display name."
+        data_type: STRING
+        data_tests:
+          - not_null
+
+      - name: city
+        description: "City where the property is located."
+        data_type: STRING
+        data_tests:
+          - not_null
+
+      - name: occupancy_month
+        description: "First calendar date of the occupancy month."
+        data_type: DATE
+        data_tests:
+          - not_null
+
+      - name: occupied_room_nights
+        description: "Number of room-nights occupied by non-cancelled tenancies."
+        data_type: INT64
+        data_tests:
+          - not_null
+
+      - name: available_room_nights
+        description: "Number of room-nights available during the month."
+        data_type: INT64
+        data_tests:
+          - not_null
+
+      - name: occupancy_rate
+        description: "Occupied room-nights divided by available room-nights."
+        data_type: FLOAT64
+        data_tests:
+          - not_null

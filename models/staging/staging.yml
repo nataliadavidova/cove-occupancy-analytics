@@ -1,0 +1,135 @@
+version: 2
+
+models:
+  - name: stg_properties
+    description: "Cleaned and typed property records."
+    columns:
+      - name: property_id
+        description: "Unique property identifier."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - unique
+
+      - name: property_name
+        description: "Property display name."
+        data_type: STRING
+        data_tests:
+          - not_null
+
+      - name: city
+        description: "City where the property is located."
+        data_type: STRING
+
+      - name: lease_start_date
+        description: "First date when the property can be available."
+        data_type: DATE
+        data_tests:
+          - not_null
+
+      - name: lease_end_date
+        description: "Last date when the property can be available."
+        data_type: DATE
+        data_tests:
+          - not_null
+
+      - name: updated_at
+        description: "Timestamp of the latest source record update."
+        data_type: TIMESTAMP
+        data_tests:
+          - not_null
+
+      - name: deleted_at
+        description: "Timestamp when the property was soft-deleted."
+        data_type: TIMESTAMP
+
+  - name: stg_rooms
+    description: "Cleaned and typed room records."
+    columns:
+      - name: room_id
+        description: "Unique room identifier."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - unique
+
+      - name: property_id
+        description: "Identifier of the property containing the room."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: "ref('stg_properties')"
+                field: property_id
+
+      - name: room_number
+        description: "Room number within the property."
+        data_type: STRING
+
+      - name: room_type
+        description: "Operational room type."
+        data_type: STRING
+
+      - name: updated_at
+        description: "Timestamp of the latest source record update."
+        data_type: TIMESTAMP
+        data_tests:
+          - not_null
+
+      - name: deleted_at
+        description: "Timestamp when the room was soft-deleted."
+        data_type: TIMESTAMP
+
+  - name: stg_tenancies
+    description: "Cleaned and typed tenancy records."
+    columns:
+      - name: tenancy_id
+        description: "Unique tenancy identifier."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - unique
+
+      - name: room_id
+        description: "Identifier of the occupied room."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: "ref('stg_rooms')"
+                field: room_id
+
+      - name: tenant_id
+        description: "Identifier of the tenant."
+        data_type: STRING
+
+      - name: check_in_date
+        description: "Inclusive tenancy start date."
+        data_type: DATE
+        data_tests:
+          - not_null
+
+      - name: check_out_date
+        description: "Exclusive tenancy end date."
+        data_type: DATE
+        data_tests:
+          - not_null
+
+      - name: status
+        description: "Operational tenancy status."
+        data_type: STRING
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - active
+                  - cancelled
+
+      - name: updated_at
+        description: "Timestamp of the latest source record update."
+        data_type: TIMESTAMP
+        data_tests:
+          - not_null

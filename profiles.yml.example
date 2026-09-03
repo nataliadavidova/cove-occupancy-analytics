@@ -1,0 +1,11 @@
+cove_occupancy_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: your-gcp-project-id
+      dataset: cove_analytics
+      threads: 4
+      location: US
+      priority: interactive
